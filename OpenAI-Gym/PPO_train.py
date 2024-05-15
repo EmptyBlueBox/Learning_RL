@@ -1,11 +1,12 @@
 import gym
 import torch
 import datetime
+import os
 from torch.distributions import Categorical
 from tqdm import tqdm
 from torch.utils.tensorboard import SummaryWriter
 from PPO_model import PPO
-from PPO_hyperparameters import T_horizon, N_episode, model_name, max_buffer_dis
+from PPO_hyperparameters import T_horizon, N_episode, model_name, max_buffer_dis, model_folder
 
 def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -52,6 +53,7 @@ def main():
         writer.add_scalar('train/buffer size', len(model.data), n_epi) #记录经验池大小
 
     # 保存模型
+    os.makedirs(model_folder, exist_ok=True)
     torch.save(model.state_dict(), model_name+'-'+current_time+'.pth')
     print(f"Model saved to {model_name+'-'+current_time}")
 
