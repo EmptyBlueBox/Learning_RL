@@ -13,5 +13,8 @@ max_buffer_dis = 5 # buffer 最长距离
 
 model_folder = './PPO_model'
 model_name = 'PPO_model'
+model_suffix = '2024_05_16_03_14_51'
+
 visualize_folder = './PPO_result'
-visualize_suffix = 'no_buffer'
+# visualize_suffix = 'no_buffer'
+visualize_suffix = 'best_model'

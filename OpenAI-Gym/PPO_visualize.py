@@ -4,7 +4,7 @@ from torch.distributions import Categorical
 import imageio
 import os
 from PPO_model import PPO
-from PPO_hyperparameters import model_name, visualize_folder, visualize_suffix
+from PPO_hyperparameters import model_folder, model_name, model_suffix, visualize_folder, visualize_suffix
 
 def visualize_model(model_path):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -44,4 +44,4 @@ def save_frames_as_gif(frames, path):
     print(f"Video saved to {path}")
 
 if __name__ == '__main__':
-    visualize_model(model_name+'-'+visualize_suffix+'.pth')
+    visualize_model(f'{model_folder}/{model_name}-{model_suffix}.pth')
