@@ -2,15 +2,15 @@ import gym
 import torch
 from torch.distributions import Categorical
 import imageio
+import os
 from PPO_model import PPO
-from PPO_hyperparameters import model_path
-
+from PPO_hyperparameters import model_name, visualize_folder, visualize_suffix
 
 def visualize_model(model_path):
-    # env = gym.make('CartPole-v1', render_mode='human')
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     env = gym.make('CartPole-v1', render_mode='rgb_array')
-    model = PPO()
-    model.load_state_dict(torch.load(model_path))
+    model = PPO().to(device)  # 将模型移动到GPU
+    model.load_state_dict(torch.load(model_path, map_location=device))
     model.eval()
 
     s = env.reset()
@@ -23,7 +23,8 @@ def visualize_model(model_path):
     while not done:
         frame = env.render()
         frames.append(frame)
-        prob = model.pi(torch.from_numpy(s).float())
+        s_tensor = torch.from_numpy(s).float().to(device)  # 将状态张量移动到GPU
+        prob = model.pi(s_tensor)
         m = Categorical(prob)
         a = m.sample().item()
         s, r, terminated, truncated, info = env.step(a)
@@ -34,13 +35,13 @@ def visualize_model(model_path):
     print(f"Episode reward: {episode_reward}")
 
     # 保存视频
-    save_frames_as_gif(frames, 'ppo_cartpole.gif')
-
+    if os.path.exists(visualize_folder) is False:
+        os.makedirs(visualize_folder)
+    save_frames_as_gif(frames, f'{visualize_folder}/PPO_cartpole-{visualize_suffix}.gif')
 
 def save_frames_as_gif(frames, path):
     imageio.mimsave(path, frames, fps=30)
     print(f"Video saved to {path}")
 
-
 if __name__ == '__main__':
-    visualize_model(model_path)
+    visualize_model(model_name+'-'+visualize_suffix+'.pth')

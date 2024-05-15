@@ -1,4 +1,7 @@
 *.pth
+*.pt
+*.gif
 
 __pycache__
+runs
 .DS_Store
