@@ -4,6 +4,9 @@ import torch.optim as optim
 import torch.nn.functional as F
 from PPO_hyperparameters import learning_rate, gamma, lmbda, eps_clip, K_epoch, batch_size
 
+# 检查是否有可用的GPU
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 class PPO(nn.Module):
     def __init__(self):
@@ -14,6 +17,9 @@ class PPO(nn.Module):
         self.fc1 = nn.Linear(4, 256)
         self.fc_pi = nn.Linear(256, 2)
         self.fc_v = nn.Linear(256, 1)
+
+        # 将模型移动到GPU上
+        self.to(device)
 
         # 定义优化器
         self.optimizer = optim.Adam(self.parameters(), lr=learning_rate)
@@ -48,9 +54,12 @@ class PPO(nn.Module):
             prob_a_lst.append([prob_a])
             done_lst.append([0 if done else 1])
 
-        s, a, r, s_prime, done_mask, prob_a = torch.tensor(s_lst, dtype=torch.float), torch.tensor(a_lst), \
-            torch.tensor(r_lst), torch.tensor(s_prime_lst, dtype=torch.float), \
-            torch.tensor(done_lst, dtype=torch.float), torch.tensor(prob_a_lst)
+        s, a, r, s_prime, done_mask, prob_a = torch.tensor(s_lst, dtype=torch.float).to(device), \
+            torch.tensor(a_lst).to(device), \
+            torch.tensor(r_lst).to(device), \
+            torch.tensor(s_prime_lst, dtype=torch.float).to(device), \
+            torch.tensor(done_lst, dtype=torch.float).to(device), \
+            torch.tensor(prob_a_lst).to(device)
         self.data = []  # 清空存储的数据
         return s, a, r, s_prime, done_mask, prob_a
 
@@ -66,7 +75,7 @@ class PPO(nn.Module):
                 # 计算TD目标
                 td_target = r + gamma * self.v(s_prime) * done_mask
                 delta = td_target - self.v(s)
-                delta = delta.detach().numpy()
+                delta = delta.detach().cpu().numpy()  # 将其移到CPU上以进行numpy操作
 
                 # 计算优势函数
                 advantages = []
@@ -75,7 +84,7 @@ class PPO(nn.Module):
                     advantage = gamma * lmbda * advantage + delta[idx][0]
                     advantages.append([advantage])
                 advantages.reverse()
-                advantages = torch.tensor(advantages, dtype=torch.float)
+                advantages = torch.tensor(advantages, dtype=torch.float).to(device)  # 将其移回GPU上
 
                 # 计算策略和值函数的损失
                 pi = self.pi(s, softmax_dim=1)
