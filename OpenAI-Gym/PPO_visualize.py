@@ -21,8 +21,6 @@ def visualize_model(model_path):
     frames = []
 
     while not done:
-        # env.render()
-        # 捕捉帧
         frame = env.render()
         frames.append(frame)
         prob = model.pi(torch.from_numpy(s).float())

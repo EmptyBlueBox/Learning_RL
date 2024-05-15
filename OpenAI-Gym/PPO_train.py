@@ -1,5 +1,3 @@
-# CartPole-PPO.py
-
 import gym
 import torch
 from torch.distributions import Categorical

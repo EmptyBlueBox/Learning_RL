@@ -1,6 +1,5 @@
 import gym
 
-# 初始化环境并指定渲染模式
 env = gym.make('CartPole-v1', render_mode='human')
 
 for i_episode in range(20):
