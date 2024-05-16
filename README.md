@@ -18,6 +18,12 @@
 1. OpenAI Gym
     1. Run `PPO_train.py` to train
     2. Run `PPO_visualize.py` to visualize (test)
+    3. If you come across fault like:
+        ```
+        ModuleNotFoundError: No module named 'pygame'
+        ```
+        Run:
+        `pip install 'gym[classic_control]'`
 2. Issac Gym
     1. `cd Isaac-Gym/IsaacGymEnvs/isaacgymenvs`
     2. `python train.py task=Ant headless=True`
