@@ -4,10 +4,12 @@
 
 1. `cd Isaac-Gym`
 2. `conda env create -f ./RL_conda_env.yml`
-3. Download IssacGym and put it to `Isaac-Gym`, then `pip install -e ./IsaacGym`
-4. Download `https://github.com/NVIDIA-Omniverse/IsaacGymEnvs.git` and put it to `Isaac-Gym`, then `pip install -e ./IsaacGymEnvs`
-5. `python test_env.py`
-6. If you come across fault like:
+3. `pip install 'gym[classic_control]'`
+4. `pip install 'gym[all]'`
+5. Download IssacGym and put it to `Isaac-Gym`, then `pip install -e ./IsaacGym`
+6. Download `https://github.com/NVIDIA-Omniverse/IsaacGymEnvs.git` and put it to `Isaac-Gym`, then `pip install -e ./IsaacGymEnvs`
+7. `python test_env.py`
+8. If you come across fault like:
     ```
     ImportError: libpython3.7m.so.1.0: cannot open shared object file:.....
     ```
@@ -24,6 +26,10 @@
         ```
         Run:
         `pip install 'gym[classic_control]'`
+    4. Fault: 
+        ``` AttributeError: module 'gym.envs.box2d' has no attribute 'LunarLander'```
+        Do:
+        `pip install Box2D`
 2. Issac Gym
     1. `cd Isaac-Gym/IsaacGymEnvs/isaacgymenvs`
     2. `python train.py task=Ant headless=True`
