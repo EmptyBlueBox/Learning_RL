@@ -13,7 +13,7 @@
     ```
     ImportError: libpython3.7m.so.1.0: cannot open shared object file:.....
     ```
-    Put `export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/home/*/miniconda3/envs/RL/lib/libpython3.7m.so.1.0` to `.zshrc` or `.bashrc`
+    Put `export LD_LIBRARY_PATH=/home/(Your_username)/miniconda3/envs/(Your_new_env_name)/lib/` to `.zshrc` or `.bashrc`, then `source .zshrc` or `source .bashrc`
 
 ## Run
 
